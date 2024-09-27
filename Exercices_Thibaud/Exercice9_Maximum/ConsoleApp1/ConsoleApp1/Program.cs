@@ -13,28 +13,42 @@
                 new Player("Averell", 25)
             };
 
-            // Initialize search
-            Player elder = players.First();
-            int biggestAge = elder.Age;
+            players.Add(new Player("Boba", 30));
 
-            // search
-            foreach (Player p in players)
+            Console.WriteLine($"Total number of players: {players.Count}");
+
+            // Call the FindOlder method to find the oldest player
+            Player elder = FindOlder(players);
+
+            // Print the oldest player's name and age
+            Console.WriteLine($"The oldest player is {elder.Name}, who is {elder.Age} years old.");
+
+            Console.ReadKey();
+        }
+
+        // Method to find the oldest player in a list
+        static Player FindOlder(IEnumerable<Player> players)
+        {
+            // Start by assuming the first player is the oldest
+            Player elder = players.First();
+
+            // Loop through the players to find the oldest
+            for (int i = 1; i < players.Count(); i++)  // Start from 1 since we already assigned the first player
             {
-                if (p.Age > biggestAge) // memorize new elder
+                Player p = players.ElementAt(i);
+                if (p.Age > elder.Age)
                 {
-                    elder = p;
-                    biggestAge = p.Age; // for future loops
+                    elder = p;  // No need to create a new Player object, just assign the existing one
                 }
             }
 
-            Console.WriteLine($"Le plus agé est {elder.Name} qui a {elder.Age} ans");
+            return elder;  // Return the oldest player
+        }
 
-            Console.ReadKey();
-            }
-
+        // Immutable Player class
         public class Player
         {
-            private readonly string _name;
+            private readonly string _name;  // Read-only fields to ensure immutability
             private readonly int _age;
 
             public Player(string name, int age)
@@ -43,10 +57,9 @@
                 _age = age;
             }
 
+            // Public read-only properties
             public string Name => _name;
-
             public int Age => _age;
         }
-   
     }
 }
