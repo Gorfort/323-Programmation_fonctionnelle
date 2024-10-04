@@ -21,6 +21,7 @@ namespace Swapi
 
             Console.WriteLine("Star Wars Facts :");
             Console.WriteLine();
+
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             // Le film Star Wars dont le titre est le plus long
             var longestFilm = films
@@ -32,7 +33,7 @@ namespace Swapi
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             // Le personnage qui est présent dans le plus de films
             var mostFrequentCharacter = persons
-                .Select(person => new {Name = person.Name, FilmCount = films.Count(film => film.Characters.Contains(person.Url))})
+                .Select(person => new { Name = person.Name, FilmCount = films.Count(film => film.Characters.Contains(person.Url)) })
                 .OrderByDescending(pc => pc.FilmCount)
                 .FirstOrDefault();
             Console.WriteLine($"Le personnage {mostFrequentCharacter.Name} apparaît dans le plus de films !");
@@ -48,20 +49,35 @@ namespace Swapi
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             // Combien de starfighter X-Wing est-ce que je peux m'acheter si je vends un Star Destroyer ?
-            var xWingDestroyer = starships
-                .Select(starship => starship.Name);
-            Console.WriteLine($"La planète la plus peuplée est {xWingDestroyer} !");
+            var starDestroyerCost = starships.FirstOrDefault(starship => starship.Name == "Star Destroyer")?.CostInCredits;
+            var xWingCost = starships.FirstOrDefault(starship => starship.Name.ToLower().Contains("x-wing"))?.CostInCredits;
+
+            long.TryParse(starDestroyerCost, out long starDestroyer);
+            long.TryParse(xWingCost, out long xWing);
+
+            var xWingDestroyerRatio = starDestroyer / xWing;
+            Console.WriteLine($"En vendant un Star Destroyer, je peux m'acheter {xWingDestroyerRatio} X-Wings !");
             Console.ReadLine();
 
+            ////////////////////////////////////////////////////////////////////////////////////////////////////
+            // Est-ce qu'Obi-wan Kenobi peut piloter un Millennium Falcon ?
+            var obiSkills = starships.FirstOrDefault(starship => starship.Name == "Millennium Falcon").Name.ToLower().Contains("Obi-Wan Kenobi");
+            if ( obiSkills == false  )
+            {
+                Console.WriteLine($"Obi-wan ne peut pas piloter un Millennium Falcon!");
+            }
+            else
+            {
+                Console.WriteLine($"Obi-wan peut piloter un Millennium Falcon!");
+            }
+            Console.ReadLine();
+
+            ////////////////////////////////////////////////////////////////////////////////////////////////////
+            // Quelle est le vaisseau le plus rapide en vitesse lumière (vmax = vitesse atmosphérique max * ratio hyperespace) ?
         }
     }
 }
 
-// TODO
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// Est-ce qu'Obi-wan Kenobi peut piloter un Millennium Falcon ?
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// Quelle est le vaisseau le plus rapide en vitesse lumière (vmax = vitesse atmosphérique max * ratio hyperespace) ?
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Combien de vaisseaux sont plus rapides que la moyenne de la vitesse atmosphérique de tous les vaisseaux ?
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -73,4 +89,5 @@ namespace Swapi
 //    Longueur
 //    Films dans lesquels ils apparaissent (nom des films en minuscule séparés par des tirets)
 //    Nom des planètes survolées (nom des planètes en minuscule séparées par des tirets)
+
 
